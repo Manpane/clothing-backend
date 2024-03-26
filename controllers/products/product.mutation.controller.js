@@ -53,7 +53,66 @@ const addProduct = async (req, res) => {
     }
   };
 
+  const updateProduct = async (req, res) => {
+    const productId = parseInt(req.params.id);
+    const userId = req.userId;
+    const {
+      product_name,
+      product_price,
+      product_description,
+      category_id,
+    } = req.body;
   
+    try {
+      if (category_id){
+        const category = await prisma.category.findUnique({
+          where: {
+            id: parseInt(category_id),
+          },
+        });
+        if (!category) {
+          return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ error: "Category not found" });
+        }
+      }
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+        },
+      });
+      if (!product) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: "Product not found" });
+      }
+      if (product.admin_id !== userId) {
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ error: "You are unauthorized" });
+      }
+      const updatedProduct = await prisma.product.update({
+        where: {
+          id: productId,
+        },
+        data: {
+          product_name,
+          product_price,
+          product_description,
+          category_id,
+        },
+      });
+  
+      return res.json(updatedProduct);
+    } catch (error) {
+      console.error("Error updating product:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "An error occurred while updating the product" });
+    }
+  };
+
+
 
   
-  module.exports = { addProduct };
+  module.exports = { addProduct, updateProduct };

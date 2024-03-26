@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 const {
   addProduct,
-
+  updateProduct,
 } = require("../controllers/products/product.mutation.controller");
 
 const {
@@ -20,6 +20,9 @@ router
     verifyAdmin,
     addProduct,
   )
-  
+
+  router
+  .route("/product/:id")
+  .put(verifyToken, emailVerified, verifyAdmin, updateProduct)
 
 module.exports = router;
