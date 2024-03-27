@@ -112,7 +112,70 @@ const addProduct = async (req, res) => {
     }
   };
 
+  const deleteProduct = async (req, res) => {
+    const productId = parseInt(req.params.id);
+    const userId = req.userId;
+    try {
+      const product = await prisma.product.findUnique({
+        where: {
+          id: productId,
+        },
+      });
+      if (!product) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: "Product not found" });
+      }
+      if (!(product.admin_id === userId)) {
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ error: "You are unauthorized" });
+      }
+      await prisma.productImage.deleteMany({
+        where: {
+          product_id: productId
+        }
+      })
+      await prisma.cartItem.deleteMany({
+        where: {
+          product_id: productId
+        }
+      });
+      await prisma.wishlistItem.deleteMany({
+        where: {
+          product_id: productId
+        }
+      });
+      await prisma.review.deleteMany({
+        where: {
+          product_id: productId
+        }
+      });
+      const orderedProduct = await prisma.orderItem.findMany({
+        where: {
+          product_id: productId
+        }
+      });
+      if (orderedProduct.length > 0) {
+        return res
+          .status(StatusCodes.BAD_REQUEST)
+          .json({ error: "Product is in an order" });
+      }
+      const deletedProduct = await prisma.product.delete({
+        where: {
+          id: productId,
+        },
+      });
+      res
+        .status(StatusCodes.ACCEPTED)
+        .json({ message: "Product Deleted Successfully", deletedProduct });
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "An error occurred while deleting the product" });
+    }
+  };
 
 
-  
-  module.exports = { addProduct, updateProduct };
+  module.exports = { addProduct, updateProduct, deleteProduct };

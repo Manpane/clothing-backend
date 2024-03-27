@@ -3,6 +3,7 @@ const router = require("express").Router();
 const {
   addProduct,
   updateProduct,
+  deleteProduct,
 } = require("../controllers/products/product.mutation.controller");
 
 const {
@@ -24,5 +25,5 @@ router
   router
   .route("/product/:id")
   .put(verifyToken, emailVerified, verifyAdmin, updateProduct)
-
+  .delete(verifyToken, emailVerified, verifyAdmin, deleteProduct);
 module.exports = router;
