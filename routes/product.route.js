@@ -4,6 +4,7 @@ const {
   addProduct,
   updateProduct,
   deleteProduct,
+  deleteProductImage,
 } = require("../controllers/products/product.mutation.controller");
 
 const {
@@ -26,4 +27,13 @@ router
   .route("/product/:id")
   .put(verifyToken, emailVerified, verifyAdmin, updateProduct)
   .delete(verifyToken, emailVerified, verifyAdmin, deleteProduct);
+
+  router.delete(
+    "/product/image/:id",
+    verifyToken,
+    emailVerified,
+    verifyAdmin,
+    deleteProductImage,
+  );
+  
 module.exports = router;

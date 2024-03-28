@@ -177,5 +177,22 @@ const addProduct = async (req, res) => {
     }
   };
 
+  const deleteProductImage = async (req, res) => {
+    try {
+      const imageId = parseInt(req.params.id);
+  
+      deletedImage = await prisma.productImage.delete({
+        where: { id: imageId },
+      });
+  
+      res.json({ message: "Product image deleted successfully", deletedImage });
+    } catch (error) {
+      console.error("Error deleting product image:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "An error occurred while deleting the product image" });
+    }
+  };
 
-  module.exports = { addProduct, updateProduct, deleteProduct };
+
+  module.exports = { addProduct, updateProduct, deleteProduct,deleteProductImage };
