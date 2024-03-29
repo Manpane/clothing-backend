@@ -1,5 +1,4 @@
 const router = require("express").Router();
-const { UserSchema } = require("../zod_validation/auth.zod.validation");
 const {
   loginUser,
   createUser,
@@ -9,8 +8,6 @@ const {
 } = require("../controllers/auth/auth.controller");
 
 
-//
-
 const {
   sendPin,
   verifyPin,
@@ -18,11 +15,10 @@ const {
 } = require("../controllers/auth/password.controller");
 const {
   verifyToken,
-  validationMiddleware,
 } = require("../middleware/auth.middleware");
 
 router.post("/login", loginUser);
-router.post("/register", validationMiddleware(UserSchema), createUser);
+router.post("/register", createUser);
 router.post("/auth/verifyOtp", verifyOTP);
 router.post("/auth/resendOTP", resendVerificationEmail);
 

@@ -1,6 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
 const { StatusCodes } = require("http-status-codes");
-const { ORDER_STATUS } = require('../constants/order.constants');
 const prisma = new PrismaClient();
 const path = require('path');
 const fs = require("fs");

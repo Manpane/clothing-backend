@@ -22,14 +22,12 @@ const {
   validationMiddleware,
   verifySuperAdmin,
 } = require("../middleware/auth.middleware");
-const { createCategorySchema } = require("../zod_validation/all.zod.validation");
 
 router
   .route("/category")
   .post(
     verifyToken,
     verifyAdmin,
-    validationMiddleware(createCategorySchema),
     createCategory
   )
 
