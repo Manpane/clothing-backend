@@ -5,6 +5,7 @@ const {
   updateProduct,
   deleteProduct,
   deleteProductImage,
+  addProductImage,
 } = require("../controllers/products/product.mutation.controller");
 
 const {
@@ -34,6 +35,14 @@ router
     emailVerified,
     verifyAdmin,
     deleteProductImage,
+  );
+
+  router.put(
+    "/product/image/add",
+    verifyToken,
+    emailVerified,
+    verifyAdmin,
+    addProductImage,
   );
   
 module.exports = router;

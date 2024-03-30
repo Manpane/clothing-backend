@@ -194,5 +194,27 @@ const addProduct = async (req, res) => {
     }
   };
 
+  const addProductImage = async (req, res) => {
+    try {
+      const { product_id, url } = req.body;
+      console.log("Adding image: ", product_id, url);
+      const productImage = await prisma.productImage.create({
+        data: {
+          product_id: product_id,
+          url: url,
+        },
+      });
+  
+      res
+        .status(StatusCodes.CREATED)
+        .json({ message: "Product image added successfully", productImage });
+    } catch (error) {
+      console.error("Error creating product image:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "An error occurred while creating the product image" });
+    }
+  };
 
-  module.exports = { addProduct, updateProduct, deleteProduct,deleteProductImage };
+
+  module.exports = { addProduct, updateProduct, deleteProduct,deleteProductImage, addProductImage };
