@@ -13,7 +13,9 @@ const {
   verifyAdmin,
   emailVerified,
 } = require("../middleware/auth.middleware");
-
+const {
+  getProducts,
+} = require("../controllers/products/product.query.controller");
 
 router
   .route("/product")
@@ -23,6 +25,7 @@ router
     verifyAdmin,
     addProduct,
   )
+  .get(getProducts);
 
   router
   .route("/product/:id")
