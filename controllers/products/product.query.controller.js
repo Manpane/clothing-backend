@@ -60,4 +60,30 @@ const getProducts = async (req, res) => {
     }
   };
 
-  module.exports = { getProducts };
+  const getProduct = async (req, res) => {
+    const productId = parseInt(req.params.id);
+  
+    try {
+      const product = await prisma.product.findFirst({
+        where: {
+          id: productId,
+        }
+      });
+  
+      if (!product) {
+        return res
+          .status(StatusCodes.FORBIDDEN)
+          .json({ error: "Product not found" });
+      }
+      product.category = await prisma.category.findUnique({ where: { id: product.category_id } })
+      product.images = await prisma.productImage.findMany({ where: { product_id: product.id } })
+      res.json(product);
+    } catch (error) {
+      console.error("Error retrieving product:", error);
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ error: "An error occurred while retrieving the product" });
+    }
+  };
+
+  module.exports = { getProducts, getProduct };

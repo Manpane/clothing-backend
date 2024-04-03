@@ -15,6 +15,7 @@ const {
 } = require("../middleware/auth.middleware");
 const {
   getProducts,
+  getProduct,
 } = require("../controllers/products/product.query.controller");
 
 router
@@ -29,6 +30,7 @@ router
 
   router
   .route("/product/:id")
+  .get(getProduct)
   .put(verifyToken, emailVerified, verifyAdmin, updateProduct)
   .delete(verifyToken, emailVerified, verifyAdmin, deleteProduct);
 
